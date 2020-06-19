@@ -2,7 +2,7 @@ const movieModel = require("../models/movieModel");
 
 class movieController {
   static async movieFindAll(req, res, next) {
-    console.log("masuk sini");
+    
     try {
       const movies = await movieModel.movieFindAll();
       return res.status(200).json(movies);
@@ -24,7 +24,6 @@ class movieController {
 
   static async addMovie(req, res, next) {
     const data = req.body;
-
     try {
       const movie = await movieModel.addMovie(data);
       res.status(201).json(movie);

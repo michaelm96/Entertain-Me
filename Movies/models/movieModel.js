@@ -5,11 +5,11 @@ const Movie = db.collection("Movies")
 
 class movieModel {
     static movieFindAll(){
-        console.log("masuk sini");
         return Movie.find({}).toArray();
     }
 
     static findOneMovie(movieId){
+        console.log(movieId);
         return Movie.findOne({_id: ObjectId(movieId)});
     }
 

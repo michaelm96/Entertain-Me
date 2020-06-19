@@ -4,6 +4,7 @@ class tvSeriesController {
   static async findAll(req, res, next) {
     try {
       const tvSeries = await tvSeriesModel.findAll();
+      console.log(tvSeries," ....................");
       res.status(200).json(tvSeries);
     } catch (error) {
       console.log("error", error);

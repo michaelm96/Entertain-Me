@@ -1,10 +1,24 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3002
-const routes = require('./routes/routes')
+const { ApolloServer, gql, makeExecutableSchema } = require('apollo-server')
+const movieSchema = require('./schemas/movieSchema')
+const tvSeriesSchema = require('./schemas/tvSeriesSchema')
+const entertainMeSchema = require('./schemas/entertainMeSchema')
 
-app.use('/', routes)
 
-app.listen( port, () => {
-    console.log(`starting server on port ${port}`);
+const typeDefs = gql`
+    type Query
+    type Mutation
+`
+const schema = makeExecutableSchema({
+    typeDefs: [ typeDefs, movieSchema.typeDefs, tvSeriesSchema.typeDefs, entertainMeSchema.typeDefs ],
+    resolvers: [movieSchema.resolvers, tvSeriesSchema.resolvers, entertainMeSchema.resolvers],
+})
+
+const server = new ApolloServer({
+    schema
+})
+
+server.listen().then(({ url }) => {
+    console.log(`starting server on port ${url}`);
 })
