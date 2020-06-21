@@ -53,16 +53,19 @@ const resolvers = {
       }
     },
     getMovieById: async (parent, args, context, info) => {
+      console.log(args, "<<<<<<<<<<<<<");
       const { movieId } = args.movie;
       try {
         const movieCache = await redis.get(`movies+${movieId}`);
         if (movieCache) {
           console.log("via cache by id");
+          console.log(movieCache);
           return JSON.parse(movieCache);
         } else {
           console.log("via query by id");
           const movie = await axios.get(`${url}/${movieId}`);
           redis.set(`movies+${movieId}`, JSON.stringify(movie.data));
+          console.log(movie.data);
           return movie.data;
         }
       } catch (error) {

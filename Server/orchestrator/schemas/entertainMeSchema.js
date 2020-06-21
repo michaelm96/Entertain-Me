@@ -29,14 +29,15 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     getContents: async () => {
-      let movies, tv;
+      let movies, tvSeries;
       const movieCache = await redis.get("moviesContent");
       const tvSeriesCache = await redis.get("tvContent");
       if (movieCache && tvSeriesCache) {
         console.log("via cache");
         movies = JSON.parse(movieCache)
-        tv = JSON.parse(tvSeriesCache)
-        return { movies, tv };
+        tvSeries = JSON.parse(tvSeriesCache)
+        // console.log(tv);
+        return { movies, tvSeries };
       } else {
         try {
           movies = await axios.get(movieUrl);
