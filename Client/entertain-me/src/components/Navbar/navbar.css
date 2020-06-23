@@ -1,0 +1,8 @@
+.brand {
+    color: silver;
+}
+
+.brand:hover {
+    color: silver;
+    text-decoration: none;
+}

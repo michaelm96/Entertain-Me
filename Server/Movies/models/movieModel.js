@@ -9,7 +9,6 @@ class movieModel {
     }
 
     static findOneMovie(movieId){
-        console.log(movieId);
         return Movie.findOne({_id: ObjectId(movieId)});
     }
 

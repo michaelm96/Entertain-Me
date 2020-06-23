@@ -32,19 +32,17 @@ const resolvers = {
       let movies, tvSeries;
       const movieCache = await redis.get("moviesContent");
       const tvSeriesCache = await redis.get("tvContent");
-      if (movieCache && tvSeriesCache) {
-        console.log("via cache");
+      if (movieCache !== null && tvSeriesCache !== null) {
         movies = JSON.parse(movieCache)
-        tvSeries = JSON.parse(tvSeriesCache)
-        // console.log(tv);
+        tvSeries = JSON.parse(tvSeriesCache) 
         return { movies, tvSeries };
       } else {
-        try {
+        try { 
           movies = await axios.get(movieUrl);
           tv = await axios.get(tvUrl);
           await redis.set("moviesContent", JSON.stringify(movies.data));
           await redis.set("tvContent", JSON.stringify(tv.data));
-          return { movies: movies.data, tv: tv.data };
+          return { movies: movies.data, tvSeries: tv.data };
         } catch (error) {
           if (tv.data && movies.data) {
             return { tv: tv.data, movie: movies.data };

@@ -53,19 +53,16 @@ const resolvers = {
       }
     },
     getMovieById: async (parent, args, context, info) => {
-      console.log(args, "<<<<<<<<<<<<<");
       const { movieId } = args.movie;
       try {
         const movieCache = await redis.get(`movies+${movieId}`);
         if (movieCache) {
           console.log("via cache by id");
-          console.log(movieCache);
           return JSON.parse(movieCache);
         } else {
           console.log("via query by id");
           const movie = await axios.get(`${url}/${movieId}`);
           redis.set(`movies+${movieId}`, JSON.stringify(movie.data));
-          console.log(movie.data);
           return movie.data;
         }
       } catch (error) {
@@ -78,8 +75,12 @@ const resolvers = {
     addMovie: async (_, args) => {
       try {
         const movie = await axios.post(url, args.movie);
-        redis.set(`movies+${movie.data.ops[0]._id}`, JSON.stringify(movie.data.ops[0]));
-        redis.del("movies")
+        redis.set(
+          `movies+${movie.data.ops[0]._id}`,
+          JSON.stringify(movie.data.ops[0])
+        );
+        redis.del("movies");
+        redis.del("moviesContent");
         return movie.data.ops[0];
       } catch (error) {
         console.log(error);
@@ -88,20 +89,21 @@ const resolvers = {
     updateMovie: async (_, args) => {
       try {
         const movie = await axios.put(`${url}/${args.movieId}`, args.movie);
-        let tempObj = JSON.parse(movie.config.data)
-        tempObj["_id"] = args.movieId
+        let tempObj = JSON.parse(movie.config.data);
+        tempObj["_id"] = args.movieId;
         redis.set(`movies+${args.movieId}`, JSON.stringify(tempObj));
-        redis.del("movies")
+        redis.del("movies");
+        redis.del("moviesContent");
         return tempObj;
-
       } catch (error) {
-        console.log(error); 
+        console.log(error);
       }
     },
     deleteMovie: async (_, args) => {
       const movie = await axios.delete(`${url}/${args.movieId}`);
-      redis.del(`movies+${args.movieId}`)
-      redis.del("movies")
+      redis.del(`movies+${args.movieId}`);
+      redis.del("movies");
+      redis.del("moviesContent");
       return movie.data;
     },
   },

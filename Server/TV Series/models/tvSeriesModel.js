@@ -18,7 +18,6 @@ class tvSeriesModel {
     }
 
     static updateTvSeries(tvId, data){
-        console.log(data,"ini model");
         return TvSeries.updateOne({_id: ObjectId(tvId)}, { $set: data });
     }
 

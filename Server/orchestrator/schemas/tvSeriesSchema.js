@@ -74,10 +74,11 @@ const resolvers = {
   Mutation: {
     addTvSeries: async (_, args) => {
       try {
-        const tv = await axios.post(url, args.tv);
+        const tvSeries = await axios.post(url, args.tv);
         redis.set(`tvSeries+${tv.data.ops[0]._id}`, JSON.stringify(tv.data.ops[0]));
         redis.del("tvSeries")
-        return tv.data.ops[0];
+        redis.del("tvСontent")
+        return tvSeries.data.ops[0];
       } catch (error) {
         console.log(error);
       }
@@ -89,6 +90,7 @@ const resolvers = {
         tempObj["_id"] = args.tvId
         redis.set(`tvSeries+${args.tvId}`, JSON.stringify(tempObj));
         redis.del("tvSeries")
+        redis.del("tvСontent")
         return tempObj;
 
       } catch (error) {
@@ -99,6 +101,7 @@ const resolvers = {
       const tv = await axios.delete(`${url}/${args.tvId}`);
       redis.del(`tvSeries+${args.tvId}`)
       redis.del("tvSeries")
+      redis.del("tvСontent")
       return tv.data;
     },
   },

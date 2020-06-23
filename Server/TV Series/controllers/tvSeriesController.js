@@ -4,7 +4,6 @@ class tvSeriesController {
   static async findAll(req, res, next) {
     try {
       const tvSeries = await tvSeriesModel.findAll();
-      console.log(tvSeries," ....................");
       res.status(200).json(tvSeries);
     } catch (error) {
       console.log("error", error);
@@ -36,7 +35,6 @@ class tvSeriesController {
   static async updateTvSeries(req, res, next) {
     const data = req.body;
     const { tvId } = req.params;
-    console.log(data,"ini controller");
 
     try {
       const tv = await tvSeriesModel.updateTvSeries(tvId, data);
